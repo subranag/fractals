@@ -13,6 +13,17 @@ class Shapes {
     this.ctx.fill();
   }
 
+  drawQad(ptA, ptB, ptC, ptD, fillStyle = "black") {
+    this.ctx.beginPath();
+    this.ctx.moveTo(ptA.x, ptA.y);
+    this.ctx.lineTo(ptB.x, ptB.y);
+    this.ctx.lineTo(ptC.x, ptC.y);
+    this.ctx.lineTo(ptD.x, ptD.y);
+    this.ctx.closePath();
+    this.ctx.fillStyle = fillStyle;
+    this.ctx.fill();
+  }
+
   drawLine(ptA, ptB, fillStyle = "black") {
     this.ctx.beginPath();
     this.ctx.moveTo(ptA.x, ptA.y);

@@ -24,10 +24,21 @@ window.onload = function() {
       y: ptAp.y + Math.sin(angle - Math.PI / 3) * split
     }
 
+    var ptAcm = {
+      x: ptAp.x + Math.cos(angle + Math.PI / 3) * split,
+      y: ptAp.y + Math.sin(angle + Math.PI / 3) * split
+    }
+
     var ptBp = {
       x: ptA.x + 2 * Math.cos(angle) * split,
       y: ptA.y + 2 * Math.sin(angle) * split
     };
+
+    var color1 = rgba(200, 0, 0, 1 / depth);
+    var color2 = rgba(200, 100, 100, 1 / depth);
+    shape.drawQad(ptAp, ptAc, ptBp, ptAcm, fillStyle = color1);
+    shape.drawTriangle(ptA, ptAp, ptAcm, fillStyle = color2);
+    shape.drawTriangle(ptBp, ptB, ptAcm, fillStyle = color2);
 
     if (depth == 0) {
       shape.drawLine(ptA, ptAp);
@@ -55,11 +66,11 @@ window.onload = function() {
   var dist = distance(pt1, pt0);
 
   var pt2 = {
-    x : pt0.x + Math.cos(Math.PI/3) * dist,
-    y : pt0.y + Math.sin(Math.PI/3) * dist
+    x: pt0.x + Math.cos(Math.PI / 3) * dist,
+    y: pt0.y + Math.sin(Math.PI / 3) * dist
   };
 
-  koch(pt0, pt1, depth = 2);
-  koch(pt1, pt2, depth = 2);
-  koch(pt2, pt0, depth = 2);
+  koch(pt0, pt1, depth = 5);
+  koch(pt1, pt2, depth = 5);
+  koch(pt2, pt0, depth = 5);
 }
