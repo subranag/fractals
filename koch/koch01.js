@@ -42,8 +42,8 @@ window.onload = function() {
 
       ptBp = randomJitter(ptBp, randJitter);
 
-      var color1 = rgba(200, 0, 0, 1 / depth);
-      var color2 = rgba(200, 100, 100, 1 / depth);
+      var color1 = rgba(0, 200, 0, 1 / (depth * 0.6));
+      var color2 = rgba(100, 100, 100, 1 / (depth * 0.6));
       shape.drawQad(ptAp, ptAc, ptBp, ptAcm, fillStyle = color1);
       shape.drawTriangle(ptA, ptAp, ptAcm, fillStyle = color2);
       shape.drawTriangle(ptBp, ptB, ptAcm, fillStyle = color2);

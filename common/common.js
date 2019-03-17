@@ -7,6 +7,12 @@ class Shapes {
     this.ctx.clearRect(ptA.x, ptA.y, ptB.x, ptB.y);
   }
 
+  fillRect(ptA, ptB, fillStyle = "black") {
+    this.ctx.rect(ptA.x, ptA.y, ptB.x, ptB.y);
+    this.ctx.fillStyle = fillStyle;
+    this.ctx.fill();
+  }
+
   drawTriangle(ptA, ptB, ptC, fillStyle = "white") {
     this.ctx.beginPath();
     this.ctx.moveTo(ptA.x, ptA.y);
@@ -36,11 +42,27 @@ class Shapes {
     this.ctx.stroke();
   }
 
+  drawCircle(pt, radius, strokeStyle = "black") {
+    this.ctx.beginPath();
+    this.ctx.arc(pt.x, pt.y, radius, 0, 2 * Math.PI, false);
+    this.ctx.strokeStyle = strokeStyle;
+    this.ctx.lineWidth = 1;
+    this.ctx.stroke();
+  }
+
   drawPoint(pt, size = 5, fillStyle = "black") {
     this.ctx.beginPath();
     this.ctx.arc(pt.x, pt.y, size, 0, 2 * Math.PI);
     this.ctx.fillStyle = fillStyle;
     this.ctx.fill();
+  }
+
+  magentaBlueRedGradient() {
+    var grad1 = this.ctx.createLinearGradient(0, 0, 500, 500);
+    grad1.addColorStop(0, "#fb5c17");
+    grad1.addColorStop(0.5, "#fba117");
+    grad1.addColorStop(1, "#fb5c17");
+    return grad1;
   }
 }
 
@@ -88,6 +110,13 @@ var angleToPoint = function(angle, scale) {
   return {
     x: Math.cos(angle) * scale,
     y: Math.sin(angle) * scale
+  }
+}
+
+var angleToPointFrom = function(pt, angle, scale) {
+  return {
+    x: pt.x + Math.cos(angle) * scale,
+    y: pt.y + Math.sin(angle) * scale
   }
 }
 
