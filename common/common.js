@@ -34,11 +34,11 @@ class Shapes {
     this.ctx.fill();
   }
 
-  drawLine(ptA, ptB, fillStyle = "black") {
+  drawLine(ptA, ptB, strokeStyle = "black") {
     this.ctx.beginPath();
     this.ctx.moveTo(ptA.x, ptA.y);
     this.ctx.lineTo(ptB.x, ptB.y);
-    this.ctx.fillStyle = fillStyle;
+    this.ctx.strokeStyle = strokeStyle;
     this.ctx.stroke();
   }
 
@@ -57,11 +57,15 @@ class Shapes {
     this.ctx.fill();
   }
 
-  magentaBlueRedGradient() {
-    var grad1 = this.ctx.createLinearGradient(0, 0, 500, 500);
-    grad1.addColorStop(0, "#fb5c17");
-    grad1.addColorStop(0.5, "#fba117");
-    grad1.addColorStop(1, "#fb5c17");
+  magentaBlueRedGradient(ptA, ptB) {
+    var grad1 = this.ctx.createLinearGradient(ptA.x, ptA.y, ptB.x, ptB.y);
+    grad1.addColorStop(0, "#9400D3");
+    grad1.addColorStop(1 * 0.142, "#4B0082");
+    grad1.addColorStop(2 * 0.142, "#0000FF");
+    grad1.addColorStop(3 * 0.142, "#00FF00");
+    grad1.addColorStop(4 * 0.142, "#FFFF00");
+    grad1.addColorStop(5 * 0.142, "#FF7F00");
+    grad1.addColorStop(6 * 0.142, "#FF0000");
     return grad1;
   }
 }
