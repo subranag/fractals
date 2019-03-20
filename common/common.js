@@ -70,6 +70,8 @@ class Shapes {
   }
 }
 
+
+
 var midPoint = function(ptA, ptB) {
   return {
     x: (ptA.x + ptB.x) / 2,
