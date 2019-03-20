@@ -124,6 +124,21 @@ var angleToPointFrom = function(pt, angle, scale) {
   }
 }
 
+/*
+Keyboard Stuff
+*/
+var onKeyPressed = function(keyMap) {
+  document.addEventListener('keyup', function(event) {
+    var key = event.key || event.keyCode;
+    // now call function
+    if (key in keyMap) {
+      keyMap[key]();
+    }
+  });
+}
+/*
+Animation stuff
+*/
 function FpsCtrl(fps, callback) {
 
   var delay = 1000 / fps, // calc. time per frame

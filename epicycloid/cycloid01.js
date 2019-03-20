@@ -12,6 +12,7 @@ window.onload = function() {
     y: height / 2
   };
   var steps = 500;
+  var times = 2;
   var inc = (2 * Math.PI) / steps;
   var radius = (height / 2) * 0.9;
 
@@ -22,15 +23,6 @@ window.onload = function() {
     x: (origin.x + radius),
     y: (origin.y - radius)
   });
-  // draw circle
-  shape.fillRect({
-    x: 0,
-    y: 0
-  }, {
-    x: width,
-    y: height
-  });
-  shape.drawCircle(origin, radius, strokeStyle = gradient);
 
   var cycloidPoints = [];
   for (var angle = -1 * Math.PI; angle <= Math.PI; angle += inc) {
@@ -40,6 +32,15 @@ window.onload = function() {
   }
 
   var drawCycloid = function(times, cycloidPoints) {
+    // draw circle
+    shape.fillRect({
+      x: 0,
+      y: 0
+    }, {
+      x: width,
+      y: height
+    });
+    shape.drawCircle(origin, radius, strokeStyle = gradient);
     for (var range = 0; range < steps; range++) {
       var source = range;
       var target = ((range * times) - 1) % steps;
@@ -50,5 +51,12 @@ window.onload = function() {
     }
   }
 
-  drawCycloid(86, cycloidPoints);
+  drawCycloid(times, cycloidPoints);
+
+  onKeyPressed({
+    "e": function() {
+      times += 1;
+      drawCycloid(times, cycloidPoints);
+    }
+  })
 }
