@@ -22,7 +22,7 @@ window.onload = function() {
   }
 
   var angle = -Math.PI / 2;
-  var scaleFactor = 500;
+  var scaleFactor = 570;
   var maxDepth = 0;
   var ptA = angleToPoint(angle, scaleFactor);
   angle += (2 * Math.PI / 3);
