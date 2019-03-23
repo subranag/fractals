@@ -1,20 +1,17 @@
 window.onload = function() {
 
-  var canvas = document.getElementById("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width = window.innerWidth,
-    height = canvas.height = window.innerHeight;
+  var vizApp = new VizApp();
+  var graphics = vizApp.getGraphics("nshape", center = {
+    x: 0,
+    y: 0
+  });
 
-  var shape = new Shapes(context = context);
+  var origin = vizApp.center();
 
-  var origin = {
-    x: width / 2,
-    y: height / 2
-  };
-
-  var translateBy = 200;
+  var translateBy = 240;
   var angle = 0;
-  var size = 400;
+  var size = 480;
+  var maxDepth = 0;
 
   var drawFractal = function(origin, depth, size, translate, drawShape) {
     if (depth == 0) {
@@ -38,18 +35,24 @@ window.onload = function() {
   }
 
   var drawShapeCircle = function(origin, size) {
-    shape.drawCircle(origin, size, strokeStyle = "white");
+    graphics.drawCircle(origin, size, lineWidth = 3);
   }
 
-  // background black
-  shape.fillRect({
-    x: 0,
-    y: 0
-  }, {
-    x: width,
-    y: height
+  // ticker
+  const ticker = new PIXI.ticker.Ticker();
+  ticker.stop();
+  var elapsedTime = 0;
+  ticker.add((deltaTime) => {
+    elapsedTime += ticker.elapsedMS;
+    if (elapsedTime >= 400) {
+      maxDepth = ((maxDepth + 1) % 8);
+      graphics.clear();
+      drawShapeCircle(origin, size);
+      drawFractal(origin, maxDepth, size, translateBy, drawShape = drawShapeCircle);
+      elapsedTime = 0;
+    }
   });
+  ticker.start();
 
-  drawShapeCircle(origin, size);
-  drawFractal(origin, 8, size, translateBy, drawShape = drawShapeCircle);
+  vizApp.resize();
 }

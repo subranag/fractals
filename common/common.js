@@ -87,6 +87,13 @@ class VizApp {
     window.addEventListener('resize', this.resize);
   }
 
+  center() {
+    return {
+      x: this.width / 2,
+      y: this.height / 2
+    }
+  }
+
   resize() {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -141,6 +148,11 @@ class Graf {
     if (fillColor) {
       this.pixiGraphics.endFill();
     }
+  }
+
+  drawCircle(pt, radius, lineWidth = 1) {
+    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 0.5);
+    this.pixiGraphics.drawCircle(pt.x, pt.y, radius);
   }
 
   clear() {
