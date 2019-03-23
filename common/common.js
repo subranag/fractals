@@ -108,16 +108,17 @@ class VizApp {
     this.app.stage.addChild(container);
   }
 
-  getGraphics(name, center = null) {
-    if (center == null) {
-      center = {};
-      center.x = this.width / 2;
-      center.y = this.height / 2 + 100;
+  getGraphics(name, position = null) {
+    if (position == null) {
+      position = {
+        x: 0,
+        y: 0
+      };
     }
     if (!(name in this.graphics)) {
       var g = new PIXI.Graphics();
-      g.x = center.x;
-      g.y = center.y;
+      g.x = position.x;
+      g.y = position.y;
       this.rainBowBackgroud(g);
       this.graphics[name] = new Graf(g);
       this.app.stage.addChild(this.graphics[name].getPixiGraphics());
@@ -150,13 +151,62 @@ class Graf {
     }
   }
 
+  drawPolygon(points, fillColor = null, alpha = 1.0) {
+    if (fillColor) {
+      this.pixiGraphics.beginFill(fillColor, alpha);
+    } else {
+      this.pixiGraphics.lineStyle(1, 0xFFFFFF, 0.5);
+    }
+
+    var polyPoints = [];
+    points.forEach((pt) => {
+      polyPoints.push(pt.x);
+      polyPoints.push(pt.y);
+    });
+
+    this.pixiGraphics.drawPolygon(polyPoints);
+
+    if (fillColor) {
+      this.pixiGraphics.endFill();
+    }
+  }
+
   drawCircle(pt, radius, lineWidth = 1) {
     this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 0.5);
     this.pixiGraphics.drawCircle(pt.x, pt.y, radius);
   }
 
+  drawLine(ptA, ptB, lineWidth = 1) {
+    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 0.5);
+    this.pixiGraphics.moveTo(ptA.x, ptA.y);
+    this.pixiGraphics.lineTo(ptB.x, ptB.y);
+  }
+
   clear() {
     this.pixiGraphics.clear();
+  }
+}
+
+class Animation {
+  constructor(drawFunction, tickAfterMillis = 400) {
+    this.drawFunction = drawFunction;
+    this.tickAfterMillis = tickAfterMillis;
+    this.currElapsedTime = 0;
+
+    // init ticker
+    this.ticker = new PIXI.ticker.Ticker();
+    this.ticker.add((t) => {
+      this.currElapsedTime += this.ticker.elapsedMS;
+      if (this.currElapsedTime >= 400) {
+        drawFunction();
+        this.currElapsedTime = 0;
+      }
+    });
+    this.ticker.stop();
+  }
+
+  start() {
+    this.ticker.start();
   }
 }
 

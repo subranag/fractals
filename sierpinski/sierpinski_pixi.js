@@ -1,7 +1,11 @@
 window.onload = function() {
 
   var vizApp = new VizApp();
-  var graphics = vizApp.getGraphics("sierpinski");
+  var graphics = vizApp.getGraphics("sierpinski", position = {
+    x: 0,
+    y: 100
+  });
+  var center = vizApp.center();
 
   var sierPinski = function(ptA, ptB, ptC, depth) {
     if (depth == 0) {
@@ -24,28 +28,20 @@ window.onload = function() {
   var angle = -Math.PI / 2;
   var scaleFactor = 570;
   var maxDepth = 0;
-  var ptA = angleToPoint(angle, scaleFactor);
+  var ptA = angleToPointFrom(center, angle, scaleFactor);
   angle += (2 * Math.PI / 3);
-  var ptB = angleToPoint(angle, scaleFactor);
+  var ptB = angleToPointFrom(center, angle, scaleFactor);
   angle += (2 * Math.PI / 3);
-  var ptC = angleToPoint(angle, scaleFactor);
+  var ptC = angleToPointFrom(center, angle, scaleFactor);
 
   sierPinski(ptA, ptB, ptC, depth = maxDepth);
 
-  // ticker
-  const ticker = new PIXI.ticker.Ticker();
-  ticker.stop();
-  var elapsedTime = 0;
-  ticker.add((deltaTime) => {
-    elapsedTime += ticker.elapsedMS;
-    if (elapsedTime >= 400) {
-      maxDepth = ((maxDepth + 1) % 8);
-      graphics.clear();
-      sierPinski(ptA, ptB, ptC, depth = maxDepth);
-      elapsedTime = 0;
-    }
+  const anim = new Animation(() => {
+    maxDepth = ((maxDepth + 1) % 8);
+    graphics.clear();
+    sierPinski(ptA, ptB, ptC, depth = maxDepth);
   });
-  ticker.start();
+  anim.start();
 
   vizApp.resize();
 }

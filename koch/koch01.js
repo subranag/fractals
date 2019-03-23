@@ -1,12 +1,9 @@
 window.onload = function() {
 
-  var canvas = document.getElementById("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width = window.innerWidth,
-    height = canvas.height = window.innerHeight;
+  var vizApp = new VizApp();
+  var graphics = vizApp.getGraphics("koch");
 
-  var shape = new Shapes(context = context);
-  var drawPattern = function() {
+  var drawPattern = function(maxDepth) {
     var koch = function(ptA, ptB, depth) {
       var dist = distance(ptA, ptB);
       var split = dist / 3;
@@ -14,45 +11,28 @@ window.onload = function() {
       var dx = ptB.x - ptA.x;
       var angle = Math.atan2(dy, dx);
 
-      var ptAp = {
-        x: ptA.x + Math.cos(angle) * split,
-        y: ptA.y + Math.sin(angle) * split
-      };
 
+      var ptAp = angleToPointFrom(ptA, angle, split);
       ptAp = randomJitter(ptAp, randJitter);
 
-      var ptAc = {
-        x: ptAp.x + Math.cos(angle - Math.PI / 3) * split,
-        y: ptAp.y + Math.sin(angle - Math.PI / 3) * split
-      }
-
+      var ptAc = angleToPointFrom(ptAp, angle - Math.PI / 3, split);
       ptAc = randomJitter(ptAc, randJitter);
 
-      var ptAcm = {
-        x: ptAp.x + Math.cos(angle + Math.PI / 3) * split,
-        y: ptAp.y + Math.sin(angle + Math.PI / 3) * split
-      }
-
+      var ptAcm = angleToPointFrom(ptAp, angle + Math.PI / 3, split);
       ptAcm = randomJitter(ptAcm, randJitter);
 
-      var ptBp = {
-        x: ptA.x + 2 * Math.cos(angle) * split,
-        y: ptA.y + 2 * Math.sin(angle) * split
-      };
-
+      var ptBp = angleToPointFrom(ptA, angle, 2 * split);
       ptBp = randomJitter(ptBp, randJitter);
 
-      var color1 = rgba(0, 200, 0, 1 / (depth * 0.6));
-      var color2 = rgba(100, 100, 100, 1 / (depth * 0.6));
-      shape.drawQad(ptAp, ptAc, ptBp, ptAcm, fillStyle = color1);
-      shape.drawTriangle(ptA, ptAp, ptAcm, fillStyle = color2);
-      shape.drawTriangle(ptBp, ptB, ptAcm, fillStyle = color2);
+      graphics.drawPolygon([ptAp, ptAc, ptBp, ptAcm], fillColor = 0xFFFFFF);
+      graphics.drawTriangle(ptA, ptAp, ptAcm, fillColor = 0xFFFFFF);
+      graphics.drawTriangle(ptBp, ptB, ptAcm, fillColor = 0xFFFFFF);
 
       if (depth == 0) {
-        shape.drawLine(randomJitter(ptA, randJitter), randomJitter(ptAp, randJitter));
-        shape.drawLine(randomJitter(ptAp, randJitter), randomJitter(ptAc, randJitter));
-        shape.drawLine(randomJitter(ptAc, randJitter), randomJitter(ptBp, randJitter));
-        shape.drawLine(randomJitter(ptBp, randJitter), randomJitter(ptB, randJitter));
+        graphics.drawLine(randomJitter(ptA, randJitter), randomJitter(ptAp, randJitter));
+        graphics.drawLine(randomJitter(ptAp, randJitter), randomJitter(ptAc, randJitter));
+        graphics.drawLine(randomJitter(ptAc, randJitter), randomJitter(ptBp, randJitter));
+        graphics.drawLine(randomJitter(ptBp, randJitter), randomJitter(ptB, randJitter));
       } else {
         koch(ptA, ptAp, depth - 1);
         koch(ptAp, ptAc, depth - 1);
@@ -62,28 +42,34 @@ window.onload = function() {
     }
 
     var pt0 = {
-      x: 0.33 * width,
-      y: 0.3 * height
+      x: 0.3 * vizApp.width,
+      y: 0.3 * vizApp.height
     };
 
     var pt1 = {
-      x: 0.66 * width,
-      y: 0.3 * height
+      x: 0.70 * vizApp.width,
+      y: 0.3 * vizApp.height
     };
 
     var dist = distance(pt1, pt0);
 
-    var pt2 = {
-      x: pt0.x + Math.cos(Math.PI / 3) * dist,
-      y: pt0.y + Math.sin(Math.PI / 3) * dist
-    };
+    var pt2 = angleToPointFrom(pt0, Math.PI / 3, dist);
 
-    koch(pt0, pt1, depth = 5);
-    koch(pt1, pt2, depth = 5);
-    koch(pt2, pt0, depth = 5);
+    koch(pt0, pt1, depth = maxDepth);
+    koch(pt1, pt2, depth = maxDepth);
+    koch(pt2, pt0, depth = maxDepth);
   }
 
-  // animation
   var randJitter = 0;
-  drawPattern();
+
+  // start the animation
+  var maxDepth = 0;
+  const anim = new Animation(() => {
+    maxDepth = ((maxDepth + 1) % 5);
+    graphics.clear();
+    drawPattern(maxDepth);
+  });
+  anim.start();
+
+  vizApp.resize();
 }

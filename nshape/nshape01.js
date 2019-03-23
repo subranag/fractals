@@ -1,10 +1,7 @@
 window.onload = function() {
 
   var vizApp = new VizApp();
-  var graphics = vizApp.getGraphics("nshape", center = {
-    x: 0,
-    y: 0
-  });
+  var graphics = vizApp.getGraphics("nshape");
 
   var origin = vizApp.center();
 
@@ -40,21 +37,13 @@ window.onload = function() {
 
   drawShapeCircle(origin, size);
 
-  // ticker
-  const ticker = new PIXI.ticker.Ticker();
-  ticker.stop();
-  var elapsedTime = 0;
-  ticker.add((deltaTime) => {
-    elapsedTime += ticker.elapsedMS;
-    if (elapsedTime >= 400) {
-      maxDepth = ((maxDepth + 1) % 8);
-      graphics.clear();
-      drawShapeCircle(origin, size);
-      drawFractal(origin, maxDepth, size, translateBy, drawShape = drawShapeCircle);
-      elapsedTime = 0;
-    }
+  const anim = new Animation(() => {
+    maxDepth = ((maxDepth + 1) % 8);
+    graphics.clear();
+    drawShapeCircle(origin, size);
+    drawFractal(origin, maxDepth, size, translateBy, drawShape = drawShapeCircle);
   });
-  ticker.start();
+  anim.start();
 
   vizApp.resize();
 }
