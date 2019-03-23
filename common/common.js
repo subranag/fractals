@@ -70,7 +70,21 @@ class Shapes {
   }
 }
 
+var gradientTexture = function(width, height, colors) {
+  var canvas = document.createElement("canvas");
+  var ctx = canvas.getContext("2d");
+  canvas.height = height;
+  canvas.width = width;
+  var grd = ctx.createLinearGradient(0, 0, 0, height);
+  for (var i in colors) {
+    grd.addColorStop(i / (colors.length - 1), colors[i]);
+  }
 
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, width, height);
+
+  return new PIXI.Texture.fromCanvas(canvas);
+};
 
 var midPoint = function(ptA, ptB) {
   return {

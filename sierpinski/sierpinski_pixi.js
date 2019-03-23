@@ -10,6 +10,7 @@ window.onload = function() {
   document.body.appendChild(app.view);
 
   var graphics = new PIXI.Graphics();
+  graphics.blendMode = PIXI.BLEND_MODES.DIFFERENCE;
   graphics.x = width / 2;
   graphics.y = height / 2 + 100;
 
@@ -31,14 +32,14 @@ window.onload = function() {
 
   var sierPinski = function(ptA, ptB, ptC, depth) {
     if (depth == 0) {
-      drawTriangle(ptA, ptB, ptC, fillColor = 0x000000);
+      drawTriangle(ptA, ptB, ptC, fillColor = 0x8cff66, alpha = 0.2);
     } else {
       // recurse with three more triangles
       // midpoint of AB, BC, CA
-      var ptABm = randomJitter(midPoint(ptA, ptB), 3);
-      var ptBCm = randomJitter(midPoint(ptB, ptC), 3);
-      var ptCAm = randomJitter(midPoint(ptC, ptA), 3);
-      drawTriangle(ptABm, ptBCm, ptCAm, fillColor = 0xFF0000, alpha = 1 / depth * 2);
+      var ptABm = midPoint(ptA, ptB);
+      var ptBCm = midPoint(ptB, ptC);
+      var ptCAm = midPoint(ptC, ptA);
+      drawTriangle(ptABm, ptBCm, ptCAm, fillColor = 0xFF0000, alpha = 1 / depth);
 
       // now draw three triangles
       sierPinski(ptA, ptABm, ptCAm, depth - 1);
@@ -49,21 +50,30 @@ window.onload = function() {
 
   var angle = -Math.PI / 2;
   var scaleFactor = 500;
-  var maxDepth = 6;
+  var maxDepth = 0;
   var ptA = angleToPoint(angle, scaleFactor);
   angle += (2 * Math.PI / 3);
   var ptB = angleToPoint(angle, scaleFactor);
   angle += (2 * Math.PI / 3);
   var ptC = angleToPoint(angle, scaleFactor);
-
-
-
   app.stage.addChild(graphics);
 
-  app.ticker.add(function(delta) {
-    graphics.clear();
-    sierPinski(ptA, ptB, ptC, depth = maxDepth);
+  sierPinski(ptA, ptB, ptC, depth = maxDepth);
+
+  // ticker
+  const ticker = new PIXI.ticker.Ticker();
+  ticker.stop();
+  var elapsedTime = 0;
+  ticker.add((deltaTime) => {
+    elapsedTime += ticker.elapsedMS;
+    if (elapsedTime >= 300) {
+      maxDepth = ((maxDepth + 1) % 8);
+      graphics.clear();
+      sierPinski(ptA, ptB, ptC, depth = maxDepth);
+      elapsedTime = 0;
+    }
   });
+  ticker.start();
 
   // Listen for window resize events
   window.addEventListener('resize', resize);
@@ -72,11 +82,6 @@ window.onload = function() {
   function resize() {
     // Resize the renderer
     app.renderer.resize(window.innerWidth, window.innerHeight);
-
-    // You can use the 'screen' property as the renderer visible
-    // area, this is more useful than view.width/height because
-    // it handles resolution
-    rect.position.set(app.screen.width, app.screen.height);
   }
 
   resize();
