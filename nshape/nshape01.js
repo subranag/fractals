@@ -38,6 +38,8 @@ window.onload = function() {
     graphics.drawCircle(origin, size, lineWidth = 3);
   }
 
+  drawShapeCircle(origin, size);
+
   // ticker
   const ticker = new PIXI.ticker.Ticker();
   ticker.stop();
