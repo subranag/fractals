@@ -70,6 +70,89 @@ class Shapes {
   }
 }
 
+class VizApp {
+  constructor() {
+    this.app = new PIXI.Application({
+      autoResize: true,
+      resolution: devicePixelRatio,
+      antialias: true,
+      forceFXAA: true
+    });
+    document.body.appendChild(this.app.view);
+    this.graphics = {};
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    // setup resize
+    window.addEventListener('resize', this.resize);
+  }
+
+  resize() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.app.renderer.resize(window.innerWidth, window.innerHeight);
+  }
+
+  rainBowBackgroud(graphics) {
+    var container = new PIXI.Container();
+    const gradientSprite = rainbowSprite(this.width, this.height);
+    container.addChild(gradientSprite);
+    container.mask = graphics;
+    this.app.stage.addChild(container);
+  }
+
+  getGraphics(name, center = null) {
+    if (center == null) {
+      center = {};
+      center.x = this.width / 2;
+      center.y = this.height / 2 + 100;
+    }
+    if (!(name in this.graphics)) {
+      var g = new PIXI.Graphics();
+      g.x = center.x;
+      g.y = center.y;
+      this.rainBowBackgroud(g);
+      this.graphics[name] = new Graf(g);
+      this.app.stage.addChild(this.graphics[name].getPixiGraphics());
+    }
+    return this.graphics[name];
+  }
+}
+
+class Graf {
+  constructor(graphics) {
+    this.pixiGraphics = graphics;
+  }
+
+  getPixiGraphics() {
+    return this.pixiGraphics;
+  }
+
+  drawTriangle(ptA, ptB, ptC, fillColor = null, alpha = 1.0) {
+    if (fillColor) {
+      this.pixiGraphics.beginFill(fillColor, alpha);
+    } else {
+      this.pixiGraphics.lineStyle(1, 0xFFFFFF, 0.5);
+    }
+    this.pixiGraphics.moveTo(ptA.x, ptA.y);
+    this.pixiGraphics.lineTo(ptB.x, ptB.y);
+    this.pixiGraphics.lineTo(ptC.x, ptC.y);
+    this.pixiGraphics.lineTo(ptA.x, ptA.y);
+    if (fillColor) {
+      this.pixiGraphics.endFill();
+    }
+  }
+
+  clear() {
+    this.pixiGraphics.clear();
+  }
+}
+
+var rainbowSprite = function(width, height) {
+  const colors = ['#9400D3', '#4B0082', '#0000FF', '#00FF00', '#FFFF00', '#FF7F00', '#FF0000'];
+  return new PIXI.Sprite(gradientTexture(width, height, colors));
+}
+
 var gradientTexture = function(width, height, colors) {
   var canvas = document.createElement("canvas");
   var ctx = canvas.getContext("2d");
@@ -151,56 +234,4 @@ var onKeyPressed = function(keyMap) {
       keyMap[key]();
     }
   });
-}
-/*
-Animation stuff
-*/
-function FpsCtrl(fps, callback) {
-
-  var delay = 1000 / fps, // calc. time per frame
-    time = null, // start time
-    frame = -1, // frame count
-    tref; // rAF time reference
-
-  function loop(timestamp) {
-    if (time === null) time = timestamp; // init start time
-    var seg = Math.floor((timestamp - time) / delay); // calc frame no.
-    if (seg > frame) { // moved to next frame?
-      frame = seg; // update
-      callback({ // callback function
-        time: timestamp,
-        frame: frame
-      })
-    }
-    tref = requestAnimationFrame(loop)
-  }
-
-  // play status
-  this.isPlaying = false;
-
-  // set frame-rate
-  this.frameRate = function(newfps) {
-    if (!arguments.length) return fps;
-    fps = newfps;
-    delay = 1000 / fps;
-    frame = -1;
-    time = null;
-  };
-
-  // enable starting/pausing of the object
-  this.start = function() {
-    if (!this.isPlaying) {
-      this.isPlaying = true;
-      tref = requestAnimationFrame(loop);
-    }
-  };
-
-  this.pause = function() {
-    if (this.isPlaying) {
-      cancelAnimationFrame(tref);
-      this.isPlaying = false;
-      time = null;
-      frame = -1;
-    }
-  };
 }
