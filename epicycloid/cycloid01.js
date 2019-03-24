@@ -1,62 +1,50 @@
-window.onload = function() {
+window.onload = function () {
 
-  var canvas = document.getElementById("canvas"),
-    context = canvas.getContext("2d"),
-    width = canvas.width = window.innerWidth,
-    height = canvas.height = window.innerHeight;
+  var vizApp = new VizApp();
+  var graphics = vizApp.getGraphics("cycloid");
 
-  var shape = new Shapes(context = context);
+  var origin = vizApp.center();
 
-  var origin = {
-    x: width / 2,
-    y: height / 2
-  };
   var steps = 500;
   var times = 2;
-  var inc = (2 * Math.PI) / steps;
-  var radius = (height / 2) * 0.9;
+  var range = 0;
 
-  var gradient = shape.magentaBlueRedGradient({
-    x: (origin.x - radius),
-    y: (origin.y - radius)
-  }, {
-    x: (origin.x + radius),
-    y: (origin.y - radius)
-  });
+  var inc = (2 * Math.PI) / steps;
+  var radius = (vizApp.height / 2) * 0.9;
 
   var cycloidPoints = [];
   for (var angle = -1 * Math.PI; angle <= Math.PI; angle += inc) {
     var pt = angleToPointFrom(origin, angle, radius);
-    shape.drawPoint(pt, size = 1);
+    graphics.drawPoint(pt, pointSize = 2);
     cycloidPoints.push(pt);
   }
 
-  var drawCycloid = function(times, cycloidPoints) {
-    // draw circle
-    shape.fillRect({
-      x: 0,
-      y: 0
-    }, {
-      x: width,
-      y: height
-    });
-    shape.drawCircle(origin, radius, strokeStyle = gradient);
-    for (var range = 0; range < steps; range++) {
-      var source = range;
-      var target = ((range * times) - 1) % steps;
-      if (target < 0) {
-        target = 0;
-      }
-      shape.drawLine(cycloidPoints[source], cycloidPoints[target], strokeStyle = gradient);
+  var drawCycloid = function (times, cycloidPoints, range) {
+    graphics.drawCircle(origin, radius);
+    var source = range;
+    var target = ((range * times) - 1) % steps;
+    if (target < 0) {
+      target = 0;
     }
+    graphics.drawLine(cycloidPoints[source], cycloidPoints[target]);
   }
 
-  drawCycloid(times, cycloidPoints);
-
   onKeyPressed({
-    "e": function() {
+    "e": function () {
       times += 1;
-      drawCycloid(times, cycloidPoints);
+      range = 0;
+      graphics.clear();
     }
   })
+
+  const anim = new Animation(() => {
+    range = ((range + 1) % steps);
+    drawCycloid(times, cycloidPoints, range);
+    if (range == (steps - 1)) {
+      graphics.clear();
+    }
+  }, tickAfterMillis = 10);
+  anim.start();
+
+  vizApp.resize();
 }

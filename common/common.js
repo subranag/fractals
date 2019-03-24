@@ -182,6 +182,12 @@ class Graf {
     this.pixiGraphics.lineTo(ptB.x, ptB.y);
   }
 
+  drawPoint(pt, pointSize = 5, fillColor = 0xFFFFFF, alpha = 1.0) {
+    this.pixiGraphics.beginFill(fillColor, alpha);
+    this.pixiGraphics.drawCircle(pt.x, pt.y, pointSize);
+    this.pixiGraphics.endFill();
+  }
+
   clear() {
     this.pixiGraphics.clear();
   }
@@ -197,7 +203,7 @@ class Animation {
     this.ticker = new PIXI.ticker.Ticker();
     this.ticker.add((t) => {
       this.currElapsedTime += this.ticker.elapsedMS;
-      if (this.currElapsedTime >= 400) {
+      if (this.currElapsedTime >= this.tickAfterMillis) {
         drawFunction();
         this.currElapsedTime = 0;
       }
@@ -210,12 +216,12 @@ class Animation {
   }
 }
 
-var rainbowSprite = function(width, height) {
+var rainbowSprite = function (width, height) {
   const colors = ['#9400D3', '#4B0082', '#0000FF', '#00FF00', '#FFFF00', '#FF7F00', '#FF0000'];
   return new PIXI.Sprite(gradientTexture(width, height, colors));
 }
 
-var gradientTexture = function(width, height, colors) {
+var gradientTexture = function (width, height, colors) {
   var canvas = document.createElement("canvas");
   var ctx = canvas.getContext("2d");
   canvas.height = height;
@@ -231,35 +237,35 @@ var gradientTexture = function(width, height, colors) {
   return new PIXI.Texture.fromCanvas(canvas);
 };
 
-var midPoint = function(ptA, ptB) {
+var midPoint = function (ptA, ptB) {
   return {
     x: (ptA.x + ptB.x) / 2,
     y: (ptA.y + ptB.y) / 2,
   };
 }
 
-var distance = function(ptA, ptB) {
+var distance = function (ptA, ptB) {
   var a = ptB.x - ptA.x;
   var b = ptB.y - ptA.y;
   return Math.sqrt(a * a + b * b);
 }
 
-var add = function(ptA, ptB) {
+var add = function (ptA, ptB) {
   return {
     x: ptA.x + ptB.x,
     y: ptA.y + ptB.y
   };
 }
 
-var rgba = function(r, g, b, opacity = 1) {
+var rgba = function (r, g, b, opacity = 1) {
   return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
 }
 
-var randRange = function(max) {
+var randRange = function (max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-var randomJitter = function(pt, maxJitter) {
+var randomJitter = function (pt, maxJitter) {
   var sign = 1;
   if (Math.random() < 0.5 && maxJitter > 0) {
     sign *= -1;
@@ -271,14 +277,14 @@ var randomJitter = function(pt, maxJitter) {
   }
 }
 
-var angleToPoint = function(angle, scale) {
+var angleToPoint = function (angle, scale) {
   return {
     x: Math.cos(angle) * scale,
     y: Math.sin(angle) * scale
   }
 }
 
-var angleToPointFrom = function(pt, angle, scale) {
+var angleToPointFrom = function (pt, angle, scale) {
   return {
     x: pt.x + Math.cos(angle) * scale,
     y: pt.y + Math.sin(angle) * scale
@@ -288,8 +294,8 @@ var angleToPointFrom = function(pt, angle, scale) {
 /*
 Keyboard Stuff
 */
-var onKeyPressed = function(keyMap) {
-  document.addEventListener('keyup', function(event) {
+var onKeyPressed = function (keyMap) {
+  document.addEventListener('keyup', function (event) {
     var key = event.key || event.keyCode;
     // now call function
     if (key in keyMap) {
