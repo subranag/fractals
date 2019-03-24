@@ -30,12 +30,20 @@ window.onload = function () {
   }
 
   onKeyPressed({
-    "e": function () {
+    "+": function () {
       times += 1;
       range = 0;
       graphics.clear();
+    },
+    "-": function () {
+      times = times - 1;
+      if (times < 2) {
+        times = 2;
+      }
+      range = 0;
+      graphics.clear();
     }
-  })
+  });
 
   const anim = new Animation(() => {
     range = ((range + 1) % steps);
@@ -43,7 +51,7 @@ window.onload = function () {
     if (range == (steps - 1)) {
       graphics.clear();
     }
-  }, tickAfterMillis = 10);
+  }, tickAfterMillis = 1);
   anim.start();
 
   vizApp.resize();
