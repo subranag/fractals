@@ -26,6 +26,7 @@ window.onload = function () {
     if (target < 0) {
       target = 0;
     }
+    graphics.drawPoint(cycloidPoints[source], pointSize = 2);
     graphics.drawLine(cycloidPoints[source], cycloidPoints[target]);
   }
 
