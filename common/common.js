@@ -188,6 +188,36 @@ class Graf {
     this.pixiGraphics.endFill();
   }
 
+  drawRectWithCenter(rectCenter, width, height, fillColor = null, alpha = 1.0) {
+    var halfDiagonal = Math.sqrt(width * width + height * height) / 2;
+    var topX = rectCenter.x - halfDiagonal;
+    var topY = rectCenter.y - halfDiagonal;
+
+    var points = [{
+        x: topX,
+        y: topY
+      },
+      {
+        x: topX + width,
+        y: topY
+      },
+      {
+        x: topX + width,
+        y: topY + height
+      },
+      {
+        x: topX,
+        y: topY + height
+      },
+      {
+        x: topX,
+        y: topY
+      }
+    ];
+
+    this.drawPolygon(points, fillColor = fillColor, alpha = alpha);
+  }
+
   clear() {
     this.pixiGraphics.clear();
   }
