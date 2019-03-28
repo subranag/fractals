@@ -71,7 +71,7 @@ class Shapes {
 }
 
 class VizApp {
-  constructor() {
+  constructor(rainbow = true) {
     this.app = new PIXI.Application({
       autoResize: true,
       resolution: devicePixelRatio,
@@ -82,6 +82,7 @@ class VizApp {
     this.graphics = {};
     this.width = window.innerWidth;
     this.height = window.innerHeight;
+    this.rainbow = rainbow;
 
     // setup resize
     window.addEventListener('resize', this.resize);
@@ -119,7 +120,9 @@ class VizApp {
       var g = new PIXI.Graphics();
       g.x = position.x;
       g.y = position.y;
-      this.rainBowBackgroud(g);
+      if (this.rainbow) {
+        this.rainBowBackgroud(g);
+      }
       this.graphics[name] = new Graf(g);
       this.app.stage.addChild(this.graphics[name].getPixiGraphics());
     }
