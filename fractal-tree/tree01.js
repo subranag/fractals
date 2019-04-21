@@ -4,7 +4,7 @@ window.onload = function () {
 
     const base = {
         x: vizApp.width / 2,
-        y: vizApp.height * 0.9
+        y: vizApp.height * 0.97
     };
 
     var drawTree = function (base, angle, scale, step) {
