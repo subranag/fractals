@@ -175,12 +175,12 @@ class Graf {
   }
 
   drawCircle(pt, radius, lineWidth = 1) {
-    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 0.5);
+    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 1);
     this.pixiGraphics.drawCircle(pt.x, pt.y, radius);
   }
 
   drawLine(ptA, ptB, lineWidth = 1) {
-    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 0.5);
+    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF, 1);
     this.pixiGraphics.moveTo(ptA.x, ptA.y);
     this.pixiGraphics.lineTo(ptB.x, ptB.y);
   }
@@ -189,6 +189,11 @@ class Graf {
     this.pixiGraphics.beginFill(fillColor, alpha);
     this.pixiGraphics.drawCircle(pt.x, pt.y, pointSize);
     this.pixiGraphics.endFill();
+  }
+
+  drawArc(pt, radius, startAngle, endAngle, anitiClock = false, lineWidth = 1) {
+    this.pixiGraphics.lineStyle(lineWidth, 0xFFFFFF);
+    this.pixiGraphics.arc(pt.x, pt.y, radius, startAngle, endAngle, anitiClock);
   }
 
   drawRectWithCenter(rectCenter, width, height, fillColor = null, alpha = 1.0) {
@@ -251,7 +256,7 @@ class Animation {
 
 var rainbowSprite = function (width, height) {
   const colors = ['#9400D3', '#4B0082', '#0000FF', '#00FF00', '#FFFF00', '#FF7F00', '#FF0000'];
-  return new PIXI.Sprite(gradientTexture(width, height, colors));
+  return new PIXI.Sprite(gradientTexture(width, height, colors.reverse()));
 }
 
 var gradientTexture = function (width, height, colors) {

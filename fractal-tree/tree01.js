@@ -4,7 +4,7 @@ window.onload = function () {
 
     const base = {
         x: vizApp.width / 2,
-        y: vizApp.height * 0.97
+        y: vizApp.height * 0.8
     };
 
     var drawBranchShape = function (base, stem) {
@@ -43,9 +43,9 @@ window.onload = function () {
         }
     };
 
-    drawTree(base, 0, vizApp.height * 0.4, 10);
-    drawTree(base, Math.PI / 4, vizApp.height * 0.4, 10);
-    drawTree(base, -Math.PI / 4, vizApp.height * 0.4, 10);
+    drawTree(base, 0, vizApp.height * 0.3, 10);
+    drawTree(base, Math.PI / 4, vizApp.height * 0.3, 10);
+    drawTree(base, -Math.PI / 4, vizApp.height * 0.3, 10);
 
     vizApp.resize();
 }
