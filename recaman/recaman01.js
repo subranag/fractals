@@ -12,7 +12,7 @@ window.onload = function () {
         y: vizApp.height * 0.5
     };
 
-    const splits = 250;
+    const splits = 230;
     //const splits = 10;
     const splitDistance = distance(start, end) / splits;
     var pointTracking = [];
@@ -42,9 +42,9 @@ window.onload = function () {
         var mid = midPoint(pointTracking[startIndex].point, pointTracking[endIndex].point);
         var radius = distance(pointTracking[startIndex].point, pointTracking[endIndex].point) / 2;
         if (endIndex < startIndex) {
-            graphics.drawArc(mid, radius, 2 * Math.PI, Math.PI, !flipper, 3);
+            graphics.drawArc(mid, radius, 2 * Math.PI, Math.PI, !flipper, 2);
         } else {
-            graphics.drawArc(mid, radius, Math.PI, 2 * Math.PI, flipper, 3);
+            graphics.drawArc(mid, radius, Math.PI, 2 * Math.PI, flipper, 2);
         }
     }
 
